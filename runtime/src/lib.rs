@@ -270,9 +270,20 @@ impl pallet_poe::Config for Runtime {
 	type Event = Event;
 }
 
+parameter_types! {
+	// one can own at most 9,999 Kitties
+	pub const MaxKittyOwned: u32 = 9999;
+
+	// 定义创建每只Kitty时需要质押原生的token数量
+	pub const KittyStake: u128 = 1_000;
+}
 impl pallet_kitties::Config for Runtime {
 	type Event = Event;
-	type Randomness = RandomnessCollectiveFlip;
+	type KittyRandomness = RandomnessCollectiveFlip;
+	type Currency = Balances;
+	type MaxKittyOwned = self::MaxKittyOwned;
+	type KittyIndex = u32; //定义Kitty的索引ID类型
+	type KittyStake = KittyStake; //引入KittyStake常量
 }
 // Create the runtime by composing the FRAME pallets that were previously configured.
 construct_runtime!(
